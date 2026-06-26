@@ -63,6 +63,32 @@ input:focus{border-color:#2B4C8C;box-shadow:0 0 0 3px rgba(43,76,140,.1)}
   <div class="row"><label>Job Title</label><input type="text" id="f-title" placeholder="e.g. Field Technician" oninput="go()" autocomplete="organization-title"></div>
   <div class="row"><label>Mobile Number</label><input type="tel" id="f-mobile" placeholder="e.g. 0412 345 678" oninput="go()" autocomplete="tel"></div>
   <div class="row"><label>Email Address</label><input type="email" id="f-email" placeholder="e.g. john.smith@protechaccess.com.au" oninput="go()" autocomplete="email"></div>
+  <div class="row">
+    <label>Signature Size &nbsp;<span id="size-label" style="font-size:12px;color:#2B4C8C;font-weight:700;">13px</span></label>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:11px;color:#999;">Small</span>
+      <input type="range" id="f-size" min="11" max="16" value="13" step="1" oninput="updateSize()" style="flex:1;height:4px;accent-color:#2B4C8C;">
+      <span style="font-size:11px;color:#999;">Large</span>
+    </div>
+  </div>
+  <div class="row">
+    <label>Environment Message &nbsp;<span id="enviro-label" style="font-size:12px;color:#2B4C8C;font-weight:700;">11px</span></label>
+    <input type="text" id="f-enviro" value="Please consider the environment before printing this e-mail!" oninput="go()" style="margin-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:11px;color:#999;">Small</span>
+      <input type="range" id="f-enviro-size" min="9" max="14" value="11" step="1" oninput="document.getElementById('enviro-label').textContent=this.value+'px';go()" style="flex:1;height:4px;accent-color:#2B4C8C;">
+      <span style="font-size:11px;color:#999;">Large</span>
+    </div>
+  </div>
+  <div class="row">
+    <label>Disclaimer &nbsp;<span id="disc-label" style="font-size:12px;color:#2B4C8C;font-weight:700;">9px</span></label>
+    <input type="text" id="f-disclaimer" value="IMPORTANT: The contents of this email and any attachments are confidential. They are intended for the named recipient(s) only. If you have received this email by mistake, please notify the sender immediately and do not disclose the contents to anyone or make copies thereof." oninput="go()" style="margin-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:11px;color:#999;">Small</span>
+      <input type="range" id="f-disc-size" min="7" max="12" value="9" step="1" oninput="document.getElementById('disc-label').textContent=this.value+'px';go()" style="flex:1;height:4px;accent-color:#2B4C8C;">
+      <span style="font-size:11px;color:#999;">Large</span>
+    </div>
+  </div>
 </div>
 
 <div class="card">
@@ -130,21 +156,23 @@ var isMob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 function ic(s){return '<img src="'+s+'" width="13" height="13" style="display:inline-block;vertical-align:middle;margin-right:6px;">';}
 
+function fsize(){ return parseInt(document.getElementById('f-size').value); }
+
 function sig(){
   var name  = document.getElementById('f-name').value  || 'Your Name';
   var title = document.getElementById('f-title').value || 'Your Job Title';
   var mob   = document.getElementById('f-mobile').value|| '04XX XXX XXX';
   var email = document.getElementById('f-email').value || 'yourname@protechaccess.com.au';
   var tel   = mob.replace(/\s/g,'');
-  return '<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;font-size:13px;color:#333;line-height:1.4;">'
+  return '<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;font-size:"+fsize()+"px;color:#333;line-height:1.4;">'
     +'<tr>'
     +'<td style="padding-right:0;vertical-align:top;">'
     +'<img src="'+L+'" width="62" height="60" alt="ProTech" style="display:block;">'
     +'</td>'
     +'<td style="vertical-align:top;border-left:3px solid '+N+';padding-left:8px;">'
-    +'<p style="margin:0 0 2px;font-size:15px;font-weight:bold;color:'+N+';">'+name+'</p>'
-    +'<p style="margin:0 0 10px;font-size:12px;color:#555;">'+title+'<br><span style="font-weight:bold;">ProTech Access Pty Ltd</span></p>'
-    +'<table cellpadding="0" cellspacing="0" border="0" style="font-size:12px;">'
+    +'<p style="margin:0 0 2px;font-size:'+(fsize()+2)+'px;font-weight:bold;color:'+N+';">'+name+'</p>'
+    +'<p style="margin:0 0 10px;font-size:'+(fsize()-1)+'px;color:#555;">'+title+'<br><span style="font-weight:bold;">ProTech Access Pty Ltd</span></p>'
+    +'<table cellpadding="0" cellspacing="0" border="0" style="font-size:'+(fsize()-1)+'px;">'
     +'<tr><td style="padding-bottom:5px;">'+ic(PI)+'<a href="tel:'+tel+'" style="color:#333;text-decoration:none;vertical-align:middle;">'+mob+'</a></td></tr>'
     +'<tr><td style="padding-bottom:5px;">'+ic(GL)+'<a href="https://protechaccess.com.au" style="color:'+N+';text-decoration:underline;vertical-align:middle;">protechaccess.com.au</a></td></tr>'
     +'<tr><td style="padding-bottom:8px;">'+ic(ML)+'<a href="mailto:'+email+'" style="color:'+N+';text-decoration:underline;vertical-align:middle;">'+email+'</a></td></tr>'
@@ -153,11 +181,16 @@ function sig(){
     +'<tr><td colspan="2" style="padding-top:10px;">'
     +'<table cellpadding="0" cellspacing="0" border="0"><tr>'
     +'<td style="padding-right:8px;vertical-align:middle;"><img src="'+G+'" width="20" height="20" alt="turbine" style="display:block;"></td>'
-    +'<td style="vertical-align:middle;font-size:11px;"><em style="color:#16a34a;font-weight:bold;">Please consider the environment before printing this e-mail!</em></td>'
+    +'<td style="vertical-align:middle;font-size:'+document.getElementById("f-enviro-size").value+'px;"><em style="color:#16a34a;font-weight:bold;">'+document.getElementById("f-enviro").value+'</em></td>'
     +'</tr></table></td></tr>'
     +'<tr><td colspan="2" style="padding-top:10px;border-top:1px solid #ddd;">'
-    +'<p style="margin:4px 0 0;font-size:9px;color:#999;line-height:1.4;max-width:500px;">IMPORTANT: The contents of this email and any attachments are confidential. They are intended for the named recipient(s) only. If you have received this email by mistake, please notify the sender immediately and do not disclose the contents to anyone or make copies thereof.</p>'
+    +'<p style="margin:4px 0 0;font-size:'+document.getElementById("f-disc-size").value+'px;color:#999;line-height:1.4;max-width:500px;">'+document.getElementById("f-disclaimer").value+'</p>'
     +'</td></tr></table>';
+}
+
+function updateSize(){
+  document.getElementById('size-label').textContent = document.getElementById('f-size').value + 'px';
+  go();
 }
 
 function go(){
